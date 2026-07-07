@@ -30,9 +30,6 @@
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse at top left, rgba(255,255,255,0.03), transparent 60%),
-      var(--board);
-    background-image:
       radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent 60%),
       repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px),
       var(--board);
@@ -108,16 +105,6 @@
     letter-spacing:0;
     opacity:.7;
   }
-  .field:has(#f-price) input{
-    border-color:rgba(232,184,75,0.45);
-  }
-  .hint{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11.5px;
-    color:var(--chalk-dim);
-    opacity:.6;
-    margin-top:12px;
-  }
   .field input, .field select{
     width:100%;
     background:var(--board);
@@ -130,6 +117,8 @@
     outline:none;
     transition:border-color .15s;
   }
+  .field input::placeholder{color:rgba(245,242,232,0.35);}
+  .field input:focus, .field select:focus{border-color:var(--yellow);}
   .field select{
     appearance:none;
     -webkit-appearance:none;
@@ -141,8 +130,8 @@
   }
   .field select option{background:var(--board); color:var(--chalk);}
   .custom-input{margin-top:8px;}
-  .field input::placeholder{color:rgba(245,242,232,0.35);}
-  .field input:focus{border-color:var(--yellow);}
+  #f-price{border-color:rgba(232,184,75,0.45);}
+
   .add-btn{
     background:var(--yellow);
     color:var(--board-dark);
@@ -158,6 +147,88 @@
   }
   .add-btn:hover{transform:translateY(-1px); box-shadow:0 4px 12px rgba(232,184,75,0.35);}
   .add-btn:active{transform:translateY(0);}
+
+  .hint{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    color:var(--chalk-dim);
+    opacity:.6;
+    margin-top:12px;
+  }
+
+  /* promo section */
+  .promo-toggle{
+    display:inline-block;
+    margin-top:14px;
+    font-size:13px;
+    color:var(--yellow);
+    cursor:pointer;
+    font-weight:600;
+    border-bottom:1px dashed rgba(232,184,75,0.4);
+    padding-bottom:1px;
+    user-select:none;
+  }
+  .promo-toggle:hover{color:#fff;}
+  .promo-section{
+    margin-top:14px;
+    padding:14px;
+    background:rgba(232,184,75,0.06);
+    border:1px dashed rgba(232,184,75,0.3);
+    border-radius:10px;
+  }
+  .promo-section label{
+    display:block;
+    font-size:12px;
+    color:var(--yellow);
+    font-family:'JetBrains Mono',monospace;
+    margin-bottom:8px;
+  }
+  .promo-type-btns{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .promo-type-btn{
+    background:var(--board);
+    border:1px solid rgba(245,242,232,0.2);
+    color:var(--chalk-dim);
+    font-family:'Sarabun',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:all .15s;
+    white-space:nowrap;
+  }
+  .promo-type-btn:hover{border-color:rgba(232,184,75,0.5); color:var(--chalk);}
+  .promo-type-btn.active{
+    background:var(--yellow);
+    border-color:var(--yellow);
+    color:var(--board-dark);
+  }
+  .promo-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+    font-size:14px;
+  }
+  .promo-row span{color:var(--chalk-dim); white-space:nowrap;}
+  .promo-row input{
+    width:70px;
+    background:var(--board);
+    border:1px solid rgba(245,242,232,0.18);
+    border-radius:8px;
+    padding:8px 10px;
+    color:var(--chalk);
+    font-family:'Sarabun',sans-serif;
+    font-size:14px;
+    outline:none;
+  }
+  .promo-row input:focus{border-color:var(--yellow);}
+
   .err{
     color:var(--red);
     font-size:13px;
@@ -176,6 +247,18 @@
     border-radius:14px;
   }
   .empty .big{font-size:34px;display:block;margin-bottom:8px;}
+
+  /* group header */
+  .group-block{margin-bottom:34px;}
+  .group-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.1em;
+    color:var(--yellow);
+    text-transform:uppercase;
+    margin:0 0 14px 4px;
+    opacity:.85;
+  }
 
   /* results header */
   .results-head{
@@ -277,6 +360,13 @@
     text-align:right;
     flex-shrink:0;
   }
+  .tag-normal-price{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    opacity:.55;
+    text-decoration:line-through;
+    margin-bottom:2px;
+  }
   .tag-unitprice{
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
@@ -301,6 +391,18 @@
     margin-top:4px;
     font-family:'JetBrains Mono',monospace;
     color:#7a6a3a;
+  }
+  .promo-badge{
+    font-size:10.5px;
+    font-family:'Sarabun',sans-serif;
+    font-weight:600;
+    margin-top:4px;
+    padding:2px 8px;
+    border-radius:20px;
+    background:var(--red);
+    color:var(--chalk);
+    display:inline-block;
+    white-space:nowrap;
   }
   .remove-btn{
     background:none;
@@ -330,7 +432,7 @@
   <header>
     <div class="eyebrow">ป้ายราคาตลาดสด</div>
     <h1>คุ้มไหม?</h1>
-    <div class="sub">ใส่ปริมาณกับราคา แล้วดูว่าอันไหนคุ้มค่าที่สุด</div>
+    <div class="sub">ใส่ปริมาณกับราคา แล้วดูว่าอันไหนคุ้มค่าที่สุด — แปลงหน่วยและคิดโปรโมชั่นให้อัตโนมัติ</div>
   </header>
   <hr class="divider">
 
@@ -363,23 +465,42 @@
         <label>จำนวน <span>(ถ้ามี)</span></label>
         <input type="number" id="f-count" placeholder="12" min="0" step="any">
       </div>
-      <div class="field optional">
-        <label>หน่วยนับ <span>(ถ้ามี)</span></label>
-        <select id="f-countunit">
-          <option value="">ไม่ระบุ</option>
-          <option value="ขวด">ขวด</option>
-          <option value="กระป๋อง">กระป๋อง</option>
-          <option value="ถุง">ถุง</option>
-          <option value="กล่อง">กล่อง</option>
-          <option value="แพ็ค">แพ็ค</option>
-          <option value="ชิ้น">ชิ้น</option>
-          <option value="อื่นๆ">อื่นๆ...</option>
-        </select>
-        <input type="text" id="f-countunit-custom" class="custom-input" placeholder="ระบุหน่วยนับ" style="display:none;">
-      </div>
       <button class="add-btn" id="add-btn">+ เพิ่มรายการ</button>
     </div>
-    <div class="hint">เช่น ราคา 500 · ปริมาณ 500 มล. · จำนวน 12 ขวด → รวม 6,000 มล.</div>
+    <div class="hint">เช่น ราคา 500 · ปริมาณ 500 มล. · จำนวน 12 → รวม 6,000 มล. · หน่วยต่างกัน (g/kg, มล./ลิตร) เทียบกันได้อัตโนมัติ</div>
+
+    <div class="promo-toggle" id="promo-toggle">+ เพิ่มโปรโมชั่น (ถ้ามี)</div>
+    <div class="promo-section" id="promo-section" style="display:none;">
+      <label>เลือกโปรโมชั่น</label>
+      <div class="promo-type-btns">
+        <button type="button" class="promo-type-btn" id="promo-btn-buyXgetY" data-type="buyXgetY">ซื้อ X แถม Y</button>
+        <button type="button" class="promo-type-btn" id="promo-btn-discountAtQty" data-type="discountAtQty">ซื้อครบ X ชิ้น ลด Y%</button>
+        <button type="button" class="promo-type-btn" id="promo-btn-nthDiscount" data-type="nthDiscount">ชิ้นที่ N ลด Y%</button>
+      </div>
+
+      <div class="promo-row" id="promo-row-buyXgetY" style="display:none;">
+        <span>ซื้อ</span>
+        <input type="number" id="f-promo-buy" min="1" step="1" placeholder="2">
+        <span>แถม</span>
+        <input type="number" id="f-promo-free" min="1" step="1" placeholder="1">
+        <span>ชิ้น</span>
+      </div>
+      <div class="promo-row" id="promo-row-discountAtQty" style="display:none;">
+        <span>ซื้อครบ</span>
+        <input type="number" id="f-promo-qty" min="1" step="1" placeholder="3">
+        <span>ชิ้น ลด</span>
+        <input type="number" id="f-promo-pct1" min="0" max="100" step="any" placeholder="20">
+        <span>%</span>
+      </div>
+      <div class="promo-row" id="promo-row-nthDiscount" style="display:none;">
+        <span>ชิ้นที่</span>
+        <input type="number" id="f-promo-nth" min="2" step="1" placeholder="2">
+        <span>ลด</span>
+        <input type="number" id="f-promo-pct2" min="0" max="100" step="any" placeholder="50">
+        <span>%</span>
+      </div>
+    </div>
+
     <div class="err" id="err"></div>
   </div>
 
@@ -388,35 +509,64 @@
     <button class="clear-btn" id="clear-btn">ล้างทั้งหมด</button>
   </div>
 
-  <div id="tags" class="tags"></div>
+  <div id="groups"></div>
   <div id="empty" class="empty">
     <span class="big">🏷️</span>
     ยังไม่มีสินค้าให้เทียบ — เพิ่มอย่างน้อย 2 รายการเพื่อดูว่าอันไหนคุ้มกว่า
   </div>
 
-  <footer>ราคาต่อหน่วย = ราคา ÷ ปริมาณ · ยิ่งน้อยยิ่งคุ้ม</footer>
+  <footer>ราคาต่อหน่วย = ราคา ÷ ปริมาณ (หลังแปลงหน่วยและคิดโปรโมชั่นแล้ว) · ยิ่งน้อยยิ่งคุ้ม</footer>
 </div>
 
 <script>
 let items = [];
-let idCounter = 0;
 
 const priceInput = document.getElementById('f-price');
 const amountInput = document.getElementById('f-amount');
 const unitInput = document.getElementById('f-unit');
 const unitCustomInput = document.getElementById('f-unit-custom');
 const countInput = document.getElementById('f-count');
-const countUnitInput = document.getElementById('f-countunit');
-const countUnitCustomInput = document.getElementById('f-countunit-custom');
+
+const promoToggle = document.getElementById('promo-toggle');
+const promoSection = document.getElementById('promo-section');
+const promoTypeBtns = document.querySelectorAll('.promo-type-btn');
+const promoRows = {
+  buyXgetY: document.getElementById('promo-row-buyXgetY'),
+  discountAtQty: document.getElementById('promo-row-discountAtQty'),
+  nthDiscount: document.getElementById('promo-row-nthDiscount'),
+};
+let selectedPromoType = null;
+const promoBuy = document.getElementById('f-promo-buy');
+const promoFree = document.getElementById('f-promo-free');
+const promoQty = document.getElementById('f-promo-qty');
+const promoPct1 = document.getElementById('f-promo-pct1');
+const promoNth = document.getElementById('f-promo-nth');
+const promoPct2 = document.getElementById('f-promo-pct2');
+
 const errEl = document.getElementById('err');
-const tagsEl = document.getElementById('tags');
+const groupsEl = document.getElementById('groups');
 const emptyEl = document.getElementById('empty');
 const resultsHeadEl = document.getElementById('results-head');
 const resultsTitleEl = document.getElementById('results-title');
 
+// unit conversion table: units that share a group get normalized to the group's base unit
+const UNIT_META = {
+  'กรัม': {group:'มวล (กรัม/กก.)', base:'กรัม', factor:1},
+  'กก.':  {group:'มวล (กรัม/กก.)', base:'กรัม', factor:1000},
+  'มล.':  {group:'ปริมาตร (มล./ลิตร)', base:'มล.', factor:1},
+  'ลิตร': {group:'ปริมาตร (มล./ลิตร)', base:'มล.', factor:1000},
+};
+function getUnitMeta(unit){
+  return UNIT_META[unit] || {group:'หน่วย: ' + unit, base:unit, factor:1};
+}
+
 function fmt(n){
   if(!isFinite(n)) return '—';
   return n.toLocaleString('th-TH', {minimumFractionDigits:2, maximumFractionDigits:4});
+}
+function fmtInt(n){
+  if(!isFinite(n)) return '—';
+  return n.toLocaleString('th-TH', {maximumFractionDigits:0});
 }
 
 unitInput.addEventListener('change', () => {
@@ -424,17 +574,51 @@ unitInput.addEventListener('change', () => {
   unitCustomInput.style.display = isOther ? 'block' : 'none';
   if(isOther) unitCustomInput.focus();
 });
-countUnitInput.addEventListener('change', () => {
-  const isOther = countUnitInput.value === 'อื่นๆ';
-  countUnitCustomInput.style.display = isOther ? 'block' : 'none';
-  if(isOther) countUnitCustomInput.focus();
-});
 
 function getUnit(){
   return unitInput.value === 'อื่นๆ' ? unitCustomInput.value.trim() : unitInput.value;
 }
-function getCountUnit(){
-  return countUnitInput.value === 'อื่นๆ' ? countUnitCustomInput.value.trim() : countUnitInput.value;
+
+promoToggle.addEventListener('click', () => {
+  const showing = promoSection.style.display !== 'none';
+  promoSection.style.display = showing ? 'none' : 'block';
+  promoToggle.textContent = showing ? '+ เพิ่มโปรโมชั่น (ถ้ามี)' : '− ซ่อนโปรโมชั่น';
+});
+
+promoTypeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.type;
+    // toggle off if clicking the already-selected button
+    if(selectedPromoType === type){
+      selectedPromoType = null;
+      promoTypeBtns.forEach(b => b.classList.remove('active'));
+      Object.values(promoRows).forEach(row => row.style.display = 'none');
+      return;
+    }
+    selectedPromoType = type;
+    promoTypeBtns.forEach(b => b.classList.toggle('active', b.dataset.type === type));
+    Object.entries(promoRows).forEach(([key, row]) => {
+      row.style.display = key === type ? 'flex' : 'none';
+    });
+  });
+});
+
+function resetPromoForm(){
+  selectedPromoType = null;
+  promoTypeBtns.forEach(b => b.classList.remove('active'));
+  Object.values(promoRows).forEach(row => row.style.display = 'none');
+  promoBuy.value = ''; promoFree.value = '';
+  promoQty.value = ''; promoPct1.value = '';
+  promoNth.value = ''; promoPct2.value = '';
+  promoSection.style.display = 'none';
+  promoToggle.textContent = '+ เพิ่มโปรโมชั่น (ถ้ามี)';
+}
+
+function promoLabelText(promoType, promo){
+  if(promoType === 'buyXgetY') return `ซื้อ ${fmtInt(promo.buy)} แถม ${fmtInt(promo.free)}`;
+  if(promoType === 'discountAtQty') return `ซื้อครบ ${fmtInt(promo.qty)} ลด ${promo.percent}%`;
+  if(promoType === 'nthDiscount') return `ชิ้นที่ ${fmtInt(promo.nth)} ลด ${promo.percent}%`;
+  return '';
 }
 
 function addItem(){
@@ -444,7 +628,6 @@ function addItem(){
   const unit = getUnit() || 'หน่วย';
   const countRaw = countInput.value.trim();
   const count = countRaw === '' ? 1 : parseFloat(countRaw);
-  const countUnit = getCountUnit();
 
   if(price === '' || isNaN(price) || price < 0){
     errEl.textContent = 'กรุณาใส่ราคาให้ถูกต้อง';
@@ -467,13 +650,51 @@ function addItem(){
     return;
   }
 
-  const totalAmount = amount * count;
+  // validate + collect promo (button-selected type; leaving the number fields blank means no promo)
+  let promoType = 'none';
+  let promo = null;
+  if(selectedPromoType === 'buyXgetY'){
+    const buyRaw = promoBuy.value.trim(), freeRaw = promoFree.value.trim();
+    if(buyRaw !== '' || freeRaw !== ''){
+      const buy = parseFloat(buyRaw), free = parseFloat(freeRaw);
+      if(!buyRaw || !freeRaw || isNaN(buy) || isNaN(free) || buy < 1 || free < 1){
+        errEl.textContent = 'กรุณาใส่จำนวน "ซื้อ" และ "แถม" ให้ถูกต้อง (มากกว่า 0) หรือเว้นว่างทั้งคู่ถ้าไม่มีโปรฯ';
+        promoBuy.focus();
+        return;
+      }
+      promoType = 'buyXgetY';
+      promo = {buy, free};
+    }
+  } else if(selectedPromoType === 'discountAtQty'){
+    const qtyRaw = promoQty.value.trim(), pctRaw = promoPct1.value.trim();
+    if(qtyRaw !== '' || pctRaw !== ''){
+      const qty = parseFloat(qtyRaw), percent = parseFloat(pctRaw);
+      if(!qtyRaw || !pctRaw || isNaN(qty) || isNaN(percent) || qty < 1 || percent <= 0 || percent > 100){
+        errEl.textContent = 'กรุณาใส่จำนวนชิ้นและเปอร์เซ็นต์ส่วนลดให้ถูกต้อง หรือเว้นว่างทั้งคู่ถ้าไม่มีโปรฯ';
+        promoQty.focus();
+        return;
+      }
+      promoType = 'discountAtQty';
+      promo = {qty, percent};
+    }
+  } else if(selectedPromoType === 'nthDiscount'){
+    const nthRaw = promoNth.value.trim(), pctRaw = promoPct2.value.trim();
+    if(nthRaw !== '' || pctRaw !== ''){
+      const nth = parseFloat(nthRaw), percent = parseFloat(pctRaw);
+      if(!nthRaw || !pctRaw || isNaN(nth) || isNaN(percent) || nth < 2 || percent <= 0 || percent > 100){
+        errEl.textContent = 'ชิ้นที่ต้องมากกว่าหรือเท่ากับ 2 และเปอร์เซ็นต์ส่วนลดต้องถูกต้อง หรือเว้นว่างทั้งคู่ถ้าไม่มีโปรฯ';
+        promoNth.focus();
+        return;
+      }
+      promoType = 'nthDiscount';
+      promo = {nth, percent};
+    }
+  }
 
   items.push({
     id: Date.now() + Math.random(),
-    price, amount, unit, count, countUnit,
-    totalAmount,
-    unitPrice: price / totalAmount
+    price, amount, unit, count,
+    promoType, promo
   });
 
   priceInput.value = '';
@@ -482,9 +703,7 @@ function addItem(){
   unitCustomInput.value = '';
   unitCustomInput.style.display = 'none';
   countInput.value = '';
-  countUnitInput.value = '';
-  countUnitCustomInput.value = '';
-  countUnitCustomInput.style.display = 'none';
+  resetPromoForm();
   priceInput.focus();
 
   render();
@@ -500,44 +719,30 @@ function clearAll(){
   render();
 }
 
-function render(){
-  if(items.length === 0){
-    emptyEl.style.display = 'block';
-    resultsHeadEl.style.display = 'none';
-    tagsEl.innerHTML = '';
-    return;
+function computeMetrics(item){
+  const meta = getUnitMeta(item.unit);
+  const rawAmount = item.amount * item.count;
+  let effectivePrice, effectiveAmount;
+
+  if(item.promoType === 'buyXgetY'){
+    effectivePrice = item.promo.buy * item.price;
+    effectiveAmount = (item.promo.buy + item.promo.free) * rawAmount;
+  } else if(item.promoType === 'discountAtQty'){
+    effectivePrice = item.promo.qty * item.price * (1 - item.promo.percent/100);
+    effectiveAmount = item.promo.qty * rawAmount;
+  } else if(item.promoType === 'nthDiscount'){
+    effectivePrice = item.price * (item.promo.nth - 1) + item.price * (1 - item.promo.percent/100);
+    effectiveAmount = item.promo.nth * rawAmount;
+  } else {
+    effectivePrice = item.price;
+    effectiveAmount = rawAmount;
   }
-  emptyEl.style.display = 'none';
-  resultsHeadEl.style.display = 'flex';
-  resultsTitleEl.textContent = items.length === 1 ? 'ผลเปรียบเทียบ (เพิ่มอีกสักรายการเพื่อเทียบ)' : 'ผลเปรียบเทียบ · เรียงจากคุ้มสุด';
 
-  const sorted = [...items].sort((a,b) => a.unitPrice - b.unitPrice);
-  const best = sorted[0];
+  const normalizedAmount = effectiveAmount * meta.factor;
+  const unitPrice = effectivePrice / normalizedAmount;
+  const plainUnitPrice = item.price / (rawAmount * meta.factor);
 
-  tagsEl.innerHTML = sorted.map((item, idx) => {
-    const isBest = idx === 0 && items.length > 1;
-    const diffPct = items.length > 1 && !isBest ? ((item.unitPrice - best.unitPrice) / best.unitPrice * 100) : null;
-    const countLine = item.count > 1
-      ? `${fmt(item.amount)} ${escapeHtml(item.unit)} × ${fmt(item.count)}${item.countUnit ? ' ' + escapeHtml(item.countUnit) : ' รายการ'} = ${fmt(item.totalAmount)} ${escapeHtml(item.unit)}`
-      : `${fmt(item.amount)} ${escapeHtml(item.unit)}`;
-    return `
-      <div class="tag-row">
-        <div class="tag ${isBest ? 'best' : ''}">
-          <div class="hole"></div>
-          <div class="tag-rank">#${idx+1}</div>
-          <div class="tag-info">
-            <div class="tag-name">฿${item.price.toLocaleString('th-TH')}</div>
-            <div class="tag-meta">${countLine}</div>
-          </div>
-          <div class="tag-price">
-            <div class="tag-unitprice">฿${fmt(item.unitPrice)}<small> /${escapeHtml(item.unit)}</small></div>
-            ${isBest ? '<div class="tag-badge">คุ้มที่สุด ★</div>' : (diffPct !== null ? `<div class="tag-diff">แพงกว่า +${diffPct.toFixed(0)}%</div>` : '')}
-          </div>
-          <button class="remove-btn" onclick="removeItem(${item.id})" title="ลบ">✕</button>
-        </div>
-      </div>
-    `;
-  }).join('');
+  return { meta, rawAmount, normalizedAmount, unitPrice, plainUnitPrice, hasPromo: item.promoType !== 'none' };
 }
 
 function escapeHtml(str){
@@ -546,9 +751,82 @@ function escapeHtml(str){
   return div.innerHTML;
 }
 
+function renderTag(item, idx, isBest, best){
+  const m = computeMetrics(item);
+  const bestM = best ? computeMetrics(best) : null;
+  const diffPct = (best && item.id !== best.id) ? ((m.unitPrice - bestM.unitPrice) / bestM.unitPrice * 100) : null;
+
+  const countLine = item.count > 1
+    ? `${fmt(item.amount)} ${escapeHtml(item.unit)} × ${fmt(item.count)} รายการ = ${fmt(item.amount*item.count)} ${escapeHtml(item.unit)}`
+    : `${fmt(item.amount)} ${escapeHtml(item.unit)}`;
+  const convertNote = m.meta.base !== item.unit ? ` · เทียบเป็น ${escapeHtml(m.meta.base)}` : '';
+
+  return `
+    <div class="tag-row">
+      <div class="tag ${isBest ? 'best' : ''}">
+        <div class="hole"></div>
+        <div class="tag-rank">${isBest ? '🏆' : '#'+(idx+1)}</div>
+        <div class="tag-info">
+          <div class="tag-name">฿${item.price.toLocaleString('th-TH')}</div>
+          <div class="tag-meta">${countLine}${convertNote}</div>
+        </div>
+        <div class="tag-price">
+          ${m.hasPromo ? `<div class="tag-normal-price">ปกติ ฿${fmt(m.plainUnitPrice)}/${escapeHtml(m.meta.base)}</div>` : ''}
+          <div class="tag-unitprice">฿${fmt(m.unitPrice)}<small> /${escapeHtml(m.meta.base)}</small></div>
+          ${isBest ? '<div class="tag-badge">คุ้มที่สุด ★</div>' : (diffPct !== null ? `<div class="tag-diff">แพงกว่า +${diffPct.toFixed(0)}%</div>` : '')}
+          ${m.hasPromo ? `<div class="promo-badge">🏷 ${promoLabelText(item.promoType, item.promo)}</div>` : ''}
+        </div>
+        <button class="remove-btn" onclick="removeItem(${item.id})" title="ลบ">✕</button>
+      </div>
+    </div>
+  `;
+}
+
+function render(){
+  if(items.length === 0){
+    emptyEl.style.display = 'block';
+    resultsHeadEl.style.display = 'none';
+    groupsEl.innerHTML = '';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  resultsHeadEl.style.display = 'flex';
+
+  // group by unit-conversion category
+  const groups = {};
+  items.forEach(item => {
+    const key = computeMetrics(item).meta.group;
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  });
+  const groupKeys = Object.keys(groups);
+  const showGroupTitles = groupKeys.length > 1;
+
+  resultsTitleEl.textContent = items.length === 1 ? 'ผลเปรียบเทียบ (เพิ่มอีกสักรายการเพื่อเทียบ)' : 'ผลเปรียบเทียบ · เรียงจากคุ้มสุด';
+
+  groupsEl.innerHTML = groupKeys.map(key => {
+    const groupItems = [...groups[key]].sort((a,b) => {
+      const ma = computeMetrics(a), mb = computeMetrics(b);
+      const diff = ma.unitPrice - mb.unitPrice;
+      if(Math.abs(diff) > 1e-9) return diff;
+      return ma.normalizedAmount - mb.normalizedAmount; // tie → smaller quantity first
+    });
+    const minUnitPrice = groupItems.length > 1 ? computeMetrics(groupItems[0]).unitPrice : null;
+    const isTiedBest = (item) => minUnitPrice !== null && Math.abs(computeMetrics(item).unitPrice - minUnitPrice) <= Math.max(Math.abs(minUnitPrice), 1) * 1e-6;
+    const best = groupItems.length > 1 ? groupItems[0] : null;
+    const tagsHtml = groupItems.map((item, idx) => renderTag(item, idx, isTiedBest(item), best)).join('');
+    return `
+      <div class="group-block">
+        ${showGroupTitles ? `<div class="group-title">${escapeHtml(key)}</div>` : ''}
+        <div class="tags">${tagsHtml}</div>
+      </div>
+    `;
+  }).join('');
+}
+
 document.getElementById('add-btn').addEventListener('click', addItem);
 document.getElementById('clear-btn').addEventListener('click', clearAll);
-[priceInput, amountInput, unitCustomInput, countInput, countUnitCustomInput].forEach(el => {
+[priceInput, amountInput, unitCustomInput, countInput].forEach(el => {
   el.addEventListener('keydown', (e) => { if(e.key === 'Enter'){ e.preventDefault(); addItem(); } });
 });
 
