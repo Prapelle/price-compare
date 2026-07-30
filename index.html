@@ -157,6 +157,13 @@
   }
 
   /* promo section */
+  .toggles-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-top:14px;
+  }
+  .toggles-row .promo-toggle{margin-top:0;}
   .promo-toggle{
     display:inline-block;
     margin-top:14px;
@@ -260,6 +267,40 @@
     opacity:.85;
   }
 
+  /* store comparison summary */
+  .store-compare{
+    margin-bottom:32px;
+    padding:16px 18px;
+    background:var(--board-dark);
+    border:1px solid rgba(232,184,75,0.25);
+    border-radius:14px;
+  }
+  .store-compare-title{
+    font-family:'Chonburi',cursive;
+    font-size:16px;
+    color:var(--chalk);
+    margin-bottom:12px;
+  }
+  .store-compare-rows{display:flex; flex-direction:column; gap:8px;}
+  .store-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:9px 14px;
+    border-radius:9px;
+    background:rgba(245,242,232,0.04);
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    color:var(--chalk-dim);
+  }
+  .store-row.cheapest{
+    background:rgba(232,184,75,0.15);
+    color:var(--chalk);
+    font-weight:700;
+  }
+  .store-row .store-name{display:flex; align-items:center; gap:8px;}
+  .store-row .store-total{font-size:16px;}
+
   /* results header */
   .results-head{
     display:flex;
@@ -350,6 +391,18 @@
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
+  }
+  .store-tag{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.03em;
+    padding:2px 7px;
+    border-radius:20px;
+    background:var(--board-dark);
+    color:var(--yellow);
+    vertical-align:middle;
   }
   .tag-meta{
     font-size:12.5px;
@@ -469,7 +522,11 @@
     </div>
     <div class="hint">เช่น ราคา 500 · ปริมาณ 500 มล. · จำนวน 12 → รวม 6,000 มล. · หน่วยต่างกัน (g/kg, มล./ลิตร) เทียบกันได้อัตโนมัติ</div>
 
-    <div class="promo-toggle" id="promo-toggle">+ เพิ่มโปรโมชั่น (ถ้ามี)</div>
+    <div class="toggles-row">
+      <div class="promo-toggle" id="promo-toggle">+ เพิ่มโปรโมชั่น (ถ้ามี)</div>
+      <div class="promo-toggle" id="store-toggle">+ ร้านค้า</div>
+      <div class="promo-toggle" id="shipping-toggle">+ ค่าส่ง</div>
+    </div>
     <div class="promo-section" id="promo-section" style="display:none;">
       <label>เลือกโปรโมชั่น</label>
       <div class="promo-type-btns">
@@ -501,6 +558,20 @@
       </div>
     </div>
 
+    <div class="promo-section" id="store-section" style="display:none;">
+      <label>เลือกร้าน <span style="text-transform:none; letter-spacing:0; opacity:.75;">(ของจากร้านเดียวกันจะถูกรวมยอดเพื่อเทียบว่าร้านไหนถูกกว่า)</span></label>
+      <div class="promo-type-btns" id="store-btns">
+        <button type="button" class="promo-type-btn store-btn" data-store="1">ร้าน 1</button>
+        <button type="button" class="promo-type-btn store-btn" data-store="2">ร้าน 2</button>
+        <button type="button" class="promo-type-btn store-btn" data-store="3">ร้าน 3</button>
+      </div>
+    </div>
+
+    <div class="promo-section" id="shipping-section" style="display:none;">
+      <label>ค่าส่ง (บาท) <span style="text-transform:none; letter-spacing:0; opacity:.75;">— จะถูกรวมเข้ากับราคาตอนคิดราคาต่อหน่วยและยอดรวมร้าน</span></label>
+      <input type="number" id="f-shipping" min="0" step="any" placeholder="0">
+    </div>
+
     <div class="err" id="err"></div>
   </div>
 
@@ -509,6 +580,7 @@
     <button class="clear-btn" id="clear-btn">ล้างทั้งหมด</button>
   </div>
 
+  <div id="store-compare"></div>
   <div id="groups"></div>
   <div id="empty" class="empty">
     <span class="big">🏷️</span>
@@ -542,6 +614,17 @@ const promoQty = document.getElementById('f-promo-qty');
 const promoPct1 = document.getElementById('f-promo-pct1');
 const promoNth = document.getElementById('f-promo-nth');
 const promoPct2 = document.getElementById('f-promo-pct2');
+
+const storeToggle = document.getElementById('store-toggle');
+const storeSection = document.getElementById('store-section');
+const storeBtns = document.querySelectorAll('.store-btn');
+let selectedStore = null;
+
+const shippingToggle = document.getElementById('shipping-toggle');
+const shippingSection = document.getElementById('shipping-section');
+const shippingInput = document.getElementById('f-shipping');
+
+const storeCompareEl = document.getElementById('store-compare');
 
 const errEl = document.getElementById('err');
 const groupsEl = document.getElementById('groups');
@@ -612,7 +695,41 @@ function resetPromoForm(){
   promoNth.value = ''; promoPct2.value = '';
   promoSection.style.display = 'none';
   promoToggle.textContent = '+ เพิ่มโปรโมชั่น (ถ้ามี)';
+
+  selectedStore = null;
+  storeBtns.forEach(b => b.classList.remove('active'));
+  storeSection.style.display = 'none';
+  storeToggle.textContent = '+ ร้านค้า';
+
+  shippingInput.value = '';
+  shippingSection.style.display = 'none';
+  shippingToggle.textContent = '+ ค่าส่ง';
 }
+
+storeToggle.addEventListener('click', () => {
+  const showing = storeSection.style.display !== 'none';
+  storeSection.style.display = showing ? 'none' : 'block';
+  storeToggle.textContent = showing ? '+ ร้านค้า' : '− ซ่อนร้านค้า';
+});
+
+storeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const store = btn.dataset.store;
+    if(selectedStore === store){
+      selectedStore = null;
+      storeBtns.forEach(b => b.classList.remove('active'));
+      return;
+    }
+    selectedStore = store;
+    storeBtns.forEach(b => b.classList.toggle('active', b.dataset.store === store));
+  });
+});
+
+shippingToggle.addEventListener('click', () => {
+  const showing = shippingSection.style.display !== 'none';
+  shippingSection.style.display = showing ? 'none' : 'block';
+  shippingToggle.textContent = showing ? '+ ค่าส่ง' : '− ซ่อนค่าส่ง';
+});
 
 function promoLabelText(promoType, promo){
   if(promoType === 'buyXgetY') return `ซื้อ ${fmtInt(promo.buy)} แถม ${fmtInt(promo.free)}`;
@@ -691,10 +808,20 @@ function addItem(){
     }
   }
 
+  const shippingRaw = shippingInput.value.trim();
+  const shipping = shippingRaw === '' ? 0 : parseFloat(shippingRaw);
+  if(shippingRaw !== '' && (isNaN(shipping) || shipping < 0)){
+    errEl.textContent = 'ค่าส่งต้องเป็นตัวเลข 0 ขึ้นไป (หรือเว้นว่างไว้ได้)';
+    shippingInput.focus();
+    return;
+  }
+
   items.push({
     id: Date.now() + Math.random(),
     price, amount, unit, count,
-    promoType, promo
+    promoType, promo,
+    store: selectedStore,
+    shipping
   });
 
   priceInput.value = '';
@@ -738,11 +865,13 @@ function computeMetrics(item){
     effectiveAmount = rawAmount;
   }
 
+  effectivePrice += (item.shipping || 0);
+
   const normalizedAmount = effectiveAmount * meta.factor;
   const unitPrice = effectivePrice / normalizedAmount;
   const plainUnitPrice = item.price / (rawAmount * meta.factor);
 
-  return { meta, rawAmount, normalizedAmount, unitPrice, plainUnitPrice, hasPromo: item.promoType !== 'none' };
+  return { meta, rawAmount, normalizedAmount, unitPrice, plainUnitPrice, effectivePrice, hasPromo: item.promoType !== 'none' };
 }
 
 function escapeHtml(str){
@@ -760,6 +889,7 @@ function renderTag(item, idx, isBest, best){
     ? `${fmt(item.amount)} ${escapeHtml(item.unit)} × ${fmt(item.count)} รายการ = ${fmt(item.amount*item.count)} ${escapeHtml(item.unit)}`
     : `${fmt(item.amount)} ${escapeHtml(item.unit)}`;
   const convertNote = m.meta.base !== item.unit ? ` · เทียบเป็น ${escapeHtml(m.meta.base)}` : '';
+  const shippingNote = item.shipping > 0 ? ` · +ค่าส่ง ฿${item.shipping.toLocaleString('th-TH')}` : '';
 
   return `
     <div class="tag-row">
@@ -767,8 +897,8 @@ function renderTag(item, idx, isBest, best){
         <div class="hole"></div>
         <div class="tag-rank">${isBest ? '🏆' : '#'+(idx+1)}</div>
         <div class="tag-info">
-          <div class="tag-name">฿${item.price.toLocaleString('th-TH')}</div>
-          <div class="tag-meta">${countLine}${convertNote}</div>
+          <div class="tag-name">฿${item.price.toLocaleString('th-TH')}${item.store ? ` <span class="store-tag">ร้าน ${item.store}</span>` : ''}</div>
+          <div class="tag-meta">${countLine}${convertNote}${shippingNote}</div>
         </div>
         <div class="tag-price">
           ${m.hasPromo ? `<div class="tag-normal-price">ปกติ ฿${fmt(m.plainUnitPrice)}/${escapeHtml(m.meta.base)}</div>` : ''}
@@ -787,10 +917,42 @@ function render(){
     emptyEl.style.display = 'block';
     resultsHeadEl.style.display = 'none';
     groupsEl.innerHTML = '';
+    storeCompareEl.innerHTML = '';
     return;
   }
   emptyEl.style.display = 'none';
   resultsHeadEl.style.display = 'flex';
+
+  // store totals: items tagged with the same store get summed and compared
+  const storeTotals = {};
+  items.forEach(item => {
+    if(!item.store) return;
+    const m = computeMetrics(item);
+    storeTotals[item.store] = (storeTotals[item.store] || 0) + m.effectivePrice;
+  });
+  const storeKeys = Object.keys(storeTotals).sort((a,b) => a - b);
+  if(storeKeys.length > 0){
+    const minTotal = Math.min(...storeKeys.map(k => storeTotals[k]));
+    storeCompareEl.innerHTML = `
+      <div class="store-compare">
+        <div class="store-compare-title">เปรียบเทียบยอดรวมตามร้าน</div>
+        <div class="store-compare-rows">
+          ${storeKeys.map(k => {
+            const total = storeTotals[k];
+            const isCheapest = storeKeys.length > 1 && Math.abs(total - minTotal) <= Math.max(Math.abs(minTotal), 1) * 1e-6;
+            return `
+              <div class="store-row ${isCheapest ? 'cheapest' : ''}">
+                <span class="store-name">${isCheapest ? '🏆' : '🏬'} ร้าน ${escapeHtml(k)}</span>
+                <span class="store-total">฿${total.toLocaleString('th-TH', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    storeCompareEl.innerHTML = '';
+  }
 
   // group by unit-conversion category
   const groups = {};
